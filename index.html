@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ร้านอาหาร - สั่งอาหาร</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; background: #fff8ef; color: #29231f; }
+    header { background: #8b3d20; color: white; padding: 22px 16px; text-align: center; }
+    main { max-width: 600px; margin: auto; padding: 16px; }
+    .card { background: white; padding: 14px; margin: 12px 0; border-radius: 14px; box-shadow: 0 2px 8px #0001; }
+    button { background: #8b3d20; color: white; border: 0; padding: 11px 16px; border-radius: 9px; font-size: 16px; }
+    input { padding: 11px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; width: 90%; }
+    .price { color: #8b3d20; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🍜 Johnuary cat cafe </h1>
+    <p>เลือกแมวที่ต้องการได้เลย</p>
+  </header>
+
+  <main>
+    <section class="card">
+      <label for="table">โต๊ะของคุณ</label><br><br>
+      <input id="table" placeholder="เช่น โต๊ะ 1">
+    </section>
+
+    <h2>เมนูอาหาร</h2>
+    <div id="menu">
+      <div class="card">
+        <h3>อเมริกาโน่</h3>
+        <p class="price">40 บาท</p>
+        <button onclick="addItem('อเมริกาโน่',40)">เพิ่มลงตะกร้า</button>
+      </div>
+    </div>
+
+    <section class="card">
+      <h2>🛒 ตะกร้าของคุณ</h2>
+      <div id="cart">ยังไม่มีรายการ</div>
+      <p>รวม <strong id="total">0</strong> บาท</p>
+      <button onclick="sendOrder()">ส่งคำสั่งซื้อ</button>
+      <p id="message"></p>
+    </section>
+  </main>
+
+  <script>
+    const cart = [];
+
+    function addItem(name, price) {
+      const item = cart.find(x => x.name === name);
+      if (item) item.qty++;
+      else cart.push({ name, price, qty: 1 });
+      renderCart();
+    }
+
+    function renderCart() {
+      document.getElementById('cart').innerHTML =
+        cart.length ? cart.map(x =>
+          `<p>${x.name} × ${x.qty} = ${x.price * x.qty} บาท</p>`
+        ).join('') : 'ยังไม่มีรายการ';
+
+      document.getElementById('total').textContent =
+        cart.reduce((sum, x) => sum + x.price * x.qty, 0);
+    }
+
+    function sendOrder() {
+      const table = document.getElementById('table').value.trim();
+      if (!table) {
+        alert('กรุณาระบุโต๊ะ');
+        return;
+      }
+      if (!cart.length) {
+        alert('กรุณาเลือกอาหารก่อน');
+        return;
+      }
+      document.getElementById('message').textContent =
+        'ตัวอย่างหน้าจอเท่านั้น — ยังไม่ได้เชื่อมส่งออเดอร์เข้า Firebase';
+    }
+  </script>
+</body>
+</html>
